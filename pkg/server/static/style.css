@@ -1,0 +1,27 @@
+body {
+    padding: 0;
+    margin: 0;
+    background: #303030;
+    color: #dddddd;
+    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+}
+
+code {
+    font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
+    background-color: #262626;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.page {
+    padding: 4rem;
+    height: calc(100vh - 8rem);
+}
+
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+}

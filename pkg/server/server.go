@@ -19,6 +19,11 @@ import (
 //go:embed static
 var staticFS embed.FS
 
+type errorPageContext struct {
+	Code    int
+	Message string
+}
+
 type Server struct {
 	config *config.Config
 	echo   *echo.Echo
@@ -83,7 +88,10 @@ func (server *Server) HandleHTTPError(err error, c echo.Context) {
 		message = he.Message.(string)
 	}
 
-	c.String(code, message)
+	c.Render(code, "error.gohtml", errorPageContext{
+		Code:    code,
+		Message: message,
+	})
 }
 
 func New(config *config.Config) *Server {
