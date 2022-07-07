@@ -3,23 +3,24 @@ module github.com/nint8835/discord-whitelist
 go 1.18
 
 require (
+	github.com/bwmarrin/discordgo v0.25.0
 	github.com/gorilla/sessions v1.2.1
 	github.com/joho/godotenv v1.4.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/labstack/echo-contrib v0.12.0
 	github.com/labstack/echo/v4 v4.7.2
+	github.com/labstack/gommon v0.3.1
 	github.com/rs/zerolog v1.27.0
+	github.com/ziflex/lecho/v3 v3.1.0
 	golang.org/x/oauth2 v0.0.0-20220630143837-2104d58473e0
 )
 
 require (
-	github.com/bwmarrin/discordgo v0.25.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
