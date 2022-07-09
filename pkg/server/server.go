@@ -14,6 +14,7 @@ import (
 	"github.com/ziflex/lecho/v3"
 
 	"github.com/nint8835/discord-whitelist/pkg/config"
+	"github.com/nint8835/discord-whitelist/pkg/whitelist"
 )
 
 //go:embed static
@@ -31,6 +32,8 @@ type whitelistPageContext struct {
 type Server struct {
 	config *config.Config
 	echo   *echo.Echo
+
+	whitelistProvider whitelist.Provider
 }
 
 func (server *Server) Start() error {
@@ -46,8 +49,12 @@ func (server *Server) HandleIndex(c echo.Context) error {
 	var tmplContext whitelistPageContext
 
 	if c.Request().Method == http.MethodPost {
-		// TODO: Actually add whitelisting
-		tmplContext.Message = "User whitelisted successfully!"
+		username := c.FormValue("username")
+		err := server.whitelistProvider.WhitelistUser(username)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("Error whitelisting user: %s", err))
+		}
+		tmplContext.Message = fmt.Sprintf("%s whitelisted successfully!", username)
 	}
 
 	return c.Render(http.StatusOK, "whitelist.gohtml", tmplContext)
@@ -105,7 +112,12 @@ func (server *Server) HandleHTTPError(err error, c echo.Context) {
 	})
 }
 
-func New(config *config.Config) *Server {
+func New(config *config.Config) (*Server, error) {
+	whitelistProvider, err := whitelist.NewFromConfig(config)
+	if err != nil {
+		return nil, fmt.Errorf("error creating whitelist provider: %w", err)
+	}
+
 	echoInstance := echo.New()
 	echoInstance.Renderer = NewEmbeddedTemplater()
 
@@ -115,8 +127,9 @@ func New(config *config.Config) *Server {
 	echoInstance.Use(session.Middleware(sessions.NewCookieStore([]byte(config.SecretKey))))
 
 	server := &Server{
-		config: config,
-		echo:   echoInstance,
+		config:            config,
+		echo:              echoInstance,
+		whitelistProvider: whitelistProvider,
 	}
 
 	echoInstance.HTTPErrorHandler = server.HandleHTTPError
@@ -126,5 +139,5 @@ func New(config *config.Config) *Server {
 	echoInstance.GET("/callback", server.HandleCallback)
 	echoInstance.GET("/static/*", echo.WrapHandler(http.FileServer(http.FS(staticFS))))
 
-	return server
+	return server, nil
 }

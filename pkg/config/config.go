@@ -15,7 +15,9 @@ type Config struct {
 	SecretKey string `default:"correct-horse-battery-staple" split_words:"true"`
 	BindAddr  string `default:":12500" split_words:"true"`
 
-	WhitelistApiUrl string `default:"http://localhost:8500" split_words:"true"`
+	WhitelistProvider string `default:"Whitelist-HTTP-API" split_words:"true"`
+	WhitelistApiUrl   string `default:"http://localhost:8500" split_words:"true"`
+	WhitelistApiToken string `split_words:"true"`
 
 	LogLevel       string `split_words:"true" default:"debug"`
 	UseJsonLogging bool   `split_words:"true" default:"false"`

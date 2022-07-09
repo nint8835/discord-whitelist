@@ -15,7 +15,10 @@ func main() {
 		stdlog.Fatalf("error loading config: %w", err)
 	}
 
-	instance := server.New(cfg)
+	instance, err := server.New(cfg)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Error creating server instance")
+	}
 
 	err = instance.Start()
 	if err != nil {
