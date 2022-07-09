@@ -24,6 +24,10 @@ type errorPageContext struct {
 	Message string
 }
 
+type whitelistPageContext struct {
+	Message string
+}
+
 type Server struct {
 	config *config.Config
 	echo   *echo.Echo
@@ -39,7 +43,14 @@ func (server *Server) HandleIndex(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, server.config.OAuth2Config.AuthCodeURL("state"))
 	}
 
-	return c.Render(http.StatusOK, "whitelist.gohtml", nil)
+	var tmplContext whitelistPageContext
+
+	if c.Request().Method == http.MethodPost {
+		// TODO: Actually add whitelisting
+		tmplContext.Message = "User whitelisted successfully!"
+	}
+
+	return c.Render(http.StatusOK, "whitelist.gohtml", tmplContext)
 }
 
 func (server *Server) HandleCallback(c echo.Context) error {
@@ -111,6 +122,7 @@ func New(config *config.Config) *Server {
 	echoInstance.HTTPErrorHandler = server.HandleHTTPError
 
 	echoInstance.GET("/", server.HandleIndex)
+	echoInstance.POST("/", server.HandleIndex)
 	echoInstance.GET("/callback", server.HandleCallback)
 	echoInstance.GET("/static/*", echo.WrapHandler(http.FileServer(http.FS(staticFS))))
 
