@@ -5,23 +5,14 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
 jobs:
   build:
-    name: Build Docker Image
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to GHCR
-        uses: docker/login-action@v2
-        with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: ghcr.io
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: ghcr.io/nint8835/discord-whitelist:latest
+    uses: nint8835/workflows/.github/workflows/docker-build.yaml@main
+    with:
+      image_name: nint8835/discord-whitelist
